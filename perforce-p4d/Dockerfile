@@ -2,16 +2,16 @@
 # Docker configuration for P4D
 # --------------------------------------------------------------------------------
 
-FROM ubuntu:focal
+FROM ubuntu:noble
 
-LABEL vendor="Sourcegraph"
-LABEL maintainer="Joe Chen (joe@sourcegraph.com)"
+LABEL vendor="Projects"
+LABEL maintainer="Jason Tranchida (projects@projects.land)"
 
 # Update Ubuntu and add Perforce Package Source
 RUN apt-get update && \
   apt-get install -y wget gnupg2 && \
-  wget -qO - https://package.perforce.com/perforce.pubkey | apt-key add - && \
-  echo "deb http://package.perforce.com/apt/ubuntu focal release" > /etc/apt/sources.list.d/perforce.list && \
+  wget -qO- https://package.perforce.com/perforce.pubkey | gpg --dearmor -o /usr/share/keyrings/perforce.gpg && \
+  echo "deb [signed-by=/usr/share/keyrings/perforce.gpg] http://package.perforce.com/apt/ubuntu noble release" > /etc/apt/sources.list.d/perforce.list && \
   apt-get update
 
 # --------------------------------------------------------------------------------
@@ -19,20 +19,22 @@ RUN apt-get update && \
 # --------------------------------------------------------------------------------
 
 # Create perforce user and install Perforce Server
-# Do in-page search over https://package.perforce.com/apt/ubuntu/dists/focal/release/binary-amd64/Packages
-# for both "Package: helix-p4d" and "Package: helix-swarm-triggers".
-RUN apt-get update && apt-get install -y helix-p4d=2024.1-2625008~focal helix-swarm-triggers=2024.3-2628402~focal
+# Do in-page search over https://package.perforce.com/apt/ubuntu/dists/noble/release/binary-amd64/Packages
+# for both "Package: perforce-server" and "Package: helix-swarm-triggers".
+RUN apt-get update && apt-get install -y p4-server=2025.2-2882317~noble helix-swarm-triggers=2025.1-2745343~noble
 # Add external files
 COPY files/restore.sh /usr/local/bin/restore.sh
 COPY files/setup.sh /usr/local/bin/setup.sh
 COPY files/init.sh /usr/local/bin/init.sh
 COPY files/latest_checkpoint.sh /usr/local/bin/latest_checkpoint.sh
+COPY files/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN \
   chmod +x /usr/local/bin/restore.sh && \
   chmod +x /usr/local/bin/setup.sh && \
   chmod +x /usr/local/bin/init.sh && \
-  chmod +x /usr/local/bin/latest_checkpoint.sh
+  chmod +x /usr/local/bin/latest_checkpoint.sh && \
+  chmod +x /usr/local/bin/entrypoint.sh
 
 # --------------------------------------------------------------------------------
 # Docker ENVIRONMENT
@@ -74,9 +76,7 @@ VOLUME $P4HOME
 # Docker RUN
 # --------------------------------------------------------------------------------
 
-ENTRYPOINT \
-  init.sh && \
-  /usr/bin/tail -F $P4ROOT/logs/log
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 HEALTHCHECK \
   --interval=2m \

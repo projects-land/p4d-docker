@@ -1,14 +1,14 @@
-# helix-docker
+# p4d-docker
 
-This repository contains a collection of source files for building Docker images for Perforce Helix. It exists purely because there is no working Docker solution in existence for Perforce Helix.
+This repository contains a collection of source files for building Docker images for Perforce P4D. It exists purely because there is no working Docker solution in existence for Perforce P4D.
 
-## helix-p4d
+## perforce-p4d
 
-This directory contains the source files for building a Perforce Helix core server Docker image. The published Docker images are available as [`sourcegraph/helix-p4d` on Docker Hub](https://hub.docker.com/r/sourcegraph/helix-p4d).
+This directory contains the source files for building a Perforce P4D core server Docker image. The published Docker images are available as [`projects-land/perforce-p4d` on Docker Hub](https://hub.docker.com/r/projects-land/perforce-p4d).
 
 ### Build the docker image
 
-The `helix-p4d/build.sh` script will build the docker image for you. If you don't provide a tag to the script it will tag the image as `sourcegraph/helix-p4d:latest`
+The `perforce-p4d/build.sh` script will build the docker image for you. If you don't provide a tag to the script it will tag the image as `projects-land/perforce-p4d:latest`
 
 ```
 ./build.sh <tag>
@@ -16,12 +16,12 @@ The `helix-p4d/build.sh` script will build the docker image for you. If you don'
 
 ### Usage
 
-To have a disposable Perforce Helix core server running, simply do:
+To have a disposable Perforce P4D core server running, simply do:
 
 ```sh
 docker run --rm \
     --publish 1666:1666 \
-    sourcegraph/helix-p4d:2023.1
+    projects-land/perforce-p4d:2023.1
 ```
 
 The above command makes the server avaialble locally at `:1666`, with a default super user `admin` and its password `pass12349ers`.
@@ -48,11 +48,11 @@ docker run --rm \
     --publish 1666:1666 \
     --env P4USER=amy \
     --env P4PASSWD=securepassword \
-    sourcegraph/helix-p4d:2023.1
+    projects-land/perforce-p4d:2025.2
 ```
 
 > [!WARNING]
-> Please be noted that although the server survives over restarts (i.e. data are kept), but it may break if you change the options after the initial bootstrap (i.e. the very first run of the image, at when options are getting hard-coded to the Perforce Helix core server own configuration).
+> Please be noted that although the server survives over restarts (i.e. data are kept), but it may break if you change the options after the initial bootstrap (i.e. the very first run of the image, at when options are getting hard-coded to the Perforce P4D core server own configuration).
 
 To start a long-running production container, do remember to volume the data directory (`P4HOME`) and replace the `--rm` flag with `-d` (detach):
 
@@ -60,13 +60,13 @@ To start a long-running production container, do remember to volume the data dir
 docker run -d \
     --publish 1666:1666 \
     --env P4PASSWD=securepassword \
-    --volume ~/.helix-p4d-home:/p4 \
-    sourcegraph/helix-p4d:2023.1
+    --volume ~/.perforce-p4d-home:/p4 \
+    projects-land/perforce-p4d:2025.2
 ```
 
 Now you have a running server, please read our handbook for [how to set up the client side](https://handbook.sourcegraph.com/departments/technical-success/support/process/p4-enablement/).
 
-### Running Perforce Helix with SSL enabled
+### Running Perforce P4D with SSL enabled
 
 Frist, generate some self-signed SSL certificates:
 
@@ -88,9 +88,11 @@ docker run --rm \
     --env P4PORT=ssl:1666 \
     --env P4SSLDIR=/ssl \
     --volume ./ssl:/ssl \
-    sourcegraph/helix-p4d:2023.1
+    projects-land/perforce-p4d:2025.2
 ```
 
 ## Credits
+
+This repository is a fork of https://github.com/sourcegraph/helix-docker
 
 This repository is heavily inspired by https://github.com/p4paul/helix-docker and https://github.com/ambakshi/docker-perforce.
