@@ -28,13 +28,15 @@ COPY files/setup.sh /usr/local/bin/setup.sh
 COPY files/init.sh /usr/local/bin/init.sh
 COPY files/latest_checkpoint.sh /usr/local/bin/latest_checkpoint.sh
 COPY files/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY files/configure-p4d.sh /usr/local/bin/configure-p4d.sh
 
 RUN \
   chmod +x /usr/local/bin/restore.sh && \
   chmod +x /usr/local/bin/setup.sh && \
   chmod +x /usr/local/bin/init.sh && \
   chmod +x /usr/local/bin/latest_checkpoint.sh && \
-  chmod +x /usr/local/bin/entrypoint.sh
+  chmod +x /usr/local/bin/entrypoint.sh && \
+  chmod +x /usr/local/bin/configure-p4d.sh
 
 # --------------------------------------------------------------------------------
 # Docker ENVIRONMENT
