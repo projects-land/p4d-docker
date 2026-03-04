@@ -5,6 +5,12 @@ mkdir -p "$P4ROOT"
 mkdir -p "$P4DEPOTS"
 mkdir -p "$P4CKP"
 
+echo "P4ROOT: $P4ROOT"
+echo "P4DEPOTS: $P4DEPOTS"
+echo "P4CKP: $P4CKP"
+echo "P4NAME: $P4NAME"
+echo "P4PORT: $P4PORT"
+
 # Restore checkpoint if symlink latest exists
 if [ -L "$P4CKP/latest" ]; then
     echo "Restoring checkpoint..."
