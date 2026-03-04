@@ -1,5 +1,8 @@
 #!/bin/bash
 
+id
+groups
+
 # Setup directories
 mkdir -p "$P4ROOT"
 mkdir -p "$P4DEPOTS"
@@ -21,6 +24,7 @@ else
 	setup.sh
 fi
 
+echo "Logging in to Perforce..."
 p4 login <<EOF
 $P4PASSWD
 EOF
