@@ -26,7 +26,7 @@ fi
 
 if [ -n "$P4ADDTRUST" ]; then
     echo "Adding trust for $P4ADDTRUST..."
-    p4 trust $P4ADDTRUST
+    p4 trust -i $P4ADDTRUST
 fi
 
 echo "Logging in to Perforce..."
