@@ -7,6 +7,8 @@ FROM ubuntu:noble
 LABEL vendor="Projects"
 LABEL maintainer="Jason Tranchida (projects@projects.land)"
 
+ARG P4VERSION=2026.1-2972966
+
 # Update Ubuntu and add Perforce Package Source
 RUN apt-get update && \
   apt-get install -y wget gnupg2 && \
@@ -21,7 +23,8 @@ RUN apt-get update && \
 # Create perforce user and install Perforce Server
 # Do in-page search over https://package.perforce.com/apt/ubuntu/dists/noble/release/binary-amd64/Packages
 # for both "Package: perforce-server" and "Package: helix-swarm-triggers".
-RUN apt-get update && apt-get install -y p4-server=2025.2-2882317~noble helix-swarm-triggers=2025.1-2745343~noble
+RUN apt-get update && apt-get install -y p4-server=$P4VERSION~noble 
+# helix-swarm-triggers=2026.2-2965474~noble
 # Add external files
 COPY files/restore.sh /usr/local/bin/restore.sh
 COPY files/setup.sh /usr/local/bin/setup.sh
@@ -42,7 +45,7 @@ RUN \
 
 # Default Environment
 ARG NAME=perforce-server
-ARG P4NAME=master
+ARG P4NAME=main
 ARG P4TCP=1666
 ARG P4USER=admin
 ARG P4PASSWD=pass12349ers
